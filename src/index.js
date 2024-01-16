@@ -142,7 +142,7 @@ process.on('SIGINT', () => {
 });
 
 function addData(data) {
-      
+
 }
 
 function getJSON(file) { //gets data from JSON file in a useable format
@@ -156,3 +156,5 @@ function uploadJSON(file, data) { //overwrites JSON file and uploads with data
    });
    console.log("Upload complete");
 }
+
+uploadJSON();

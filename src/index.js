@@ -141,6 +141,9 @@ process.on('SIGINT', () => {
    process.exit();
 });
 
+function addData(data) {
+      
+}
 
 function getJSON(file) { //gets data from JSON file in a useable format
    return JSON.parse(fs.readFileSync(file));

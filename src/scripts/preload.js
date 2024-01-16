@@ -131,7 +131,8 @@ server.on('listening', () => {
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
-   // console.log(data);
+   uploadJSONDatabase('test.json', data);
+   //console.log(data);
 });
 
 server.bind(PORT, HOST);
@@ -141,20 +142,16 @@ process.on('SIGINT', () => {
    process.exit();
 });
 
-function addData(data) {
-
-}
-
 function getJSON(file) { //gets data from JSON file in a useable format
    return JSON.parse(fs.readFileSync(file));
 }
 
-function uploadJSON(file, data) { //overwrites JSON file and uploads with data
-   fs.writeFileSync(file, JSON.stringify(data, null, 2), {
+function uploadJSONDatabase(file, data, bol) { //overwrites JSON file and uploads with data
+   const filePath = path.join(__dirname, '../../database', file);
+   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), {
       encoding: 'utf8',
       flag: 'w'
    });
    console.log("Upload complete");
+   return fs.readdirSync(path.join(__dirname, '../../database'));
 }
-
-uploadJSON();

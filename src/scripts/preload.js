@@ -131,8 +131,10 @@ server.on('listening', () => {
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
-   uploadJSONDatabase('test.json', data);
-   //console.log(data);
+   let counter = 0;
+   uploadJSONDatabase(`test${counter}.json`, data);
+   counter++;
+   console.log(data);
 });
 
 server.bind(PORT, HOST);

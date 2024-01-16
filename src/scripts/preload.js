@@ -127,13 +127,13 @@ server.on('listening', () => {
    let address = server.address();
    console.log(`Listening on ${address.address}:${address.port}`);
 });
-let counter;
-counter = 0;
+let counter = 0;
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
-   uploadJSONDatabase(`test${counter}.json`, data);
-   counter++;
+   let file = getJSON('test.json');
+   file.push(data);
+   uploadJSONDatabase(`test.json`, file);
    console.log(data);
 });
 

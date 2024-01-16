@@ -145,7 +145,8 @@ process.on('SIGINT', () => {
 });
 
 function getJSON(file) { //gets data from JSON file in a useable format
-   return JSON.parse(fs.readFileSync(file));
+   const filePath = path.join(__dirname, '../../database', file);
+   return JSON.parse(fs.readFileSync(filePath));
 }
 
 function uploadJSONDatabase(file, data, bol) { //overwrites JSON file and uploads with data

@@ -1,3 +1,5 @@
+const fs = require('fs'); //json
+const path = require('path')
 const PORT = 2693;
 const HOST = '127.0.0.1'
 
@@ -138,3 +140,16 @@ process.on('SIGINT', () => {
    console.log(`Exiting...`);
    process.exit();
 });
+
+
+function getJSON(file) { //gets data from JSON file in a useable format
+   return JSON.parse(fs.readFileSync(file));
+}
+
+function uploadJSON(file, data) { //overwrites JSON file and uploads with data
+   fs.writeFileSync(file, JSON.stringify(data, null, 2), {
+      encoding: 'utf8',
+      flag: 'w'
+   });
+   console.log("Upload complete");
+}

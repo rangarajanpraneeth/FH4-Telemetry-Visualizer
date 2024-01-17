@@ -135,24 +135,22 @@ let raceData = [];
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
-   // let file = getJSON('raceData1.json');
-   let file = raceData;
    let newData = ({
-      timestamp: file.timestamp,
-      posX: file.carPositionX,
-      posY: file.carPositionY,
-      posZ: file.carPositionZ,
-      speed: file.carSpeed,
-      throttle: file.inputThrottle,
-      brake: file.inputBrake, 
-      clutch: file.inputClutch,
-      handbrake: file.inputHandbrake,
-      gear: file.inputGear,
-      steering: file.inputSteering
+      timestamp: data.timestamp,
+      posX: data.carPositionX,
+      posY: data.carPositionY,
+      posZ: data.carPositionZ,
+      speed: data.carSpeed,
+      throttle: data.inputThrottle,
+      brake: data.inputBrake, 
+      clutch: data.inputClutch,
+      handbrake: data.inputHandbrake,
+      gear: data.inputGear,
+      steering: data.inputSteering
    });
    if(!JSON.stringify(newData) === '{}')
       // uploadJSONDatabase(`raceData1.json`, file);
-   raceData.push(newData);
+      raceData.push(newData);
    // console.log(data);
 });
 

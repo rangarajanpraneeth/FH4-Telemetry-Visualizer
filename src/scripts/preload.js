@@ -8,7 +8,7 @@ let server = dgram.createSocket('udp4');
 
 const fToC = f => (f - 32) * 5 / 9;
 
-uploadJSONDatabase('raceData1.json', []);
+// uploadJSONDatabase('raceData1.json', []);
 
 const parsePackets = packets => {
    return {
@@ -148,7 +148,7 @@ server.on('message', packets => {
       gear: data.inputGear,
       steering: data.inputSteering
    });
-   if (!JSON.stringify(newData) === '{}') {
+   if (JSON.stringify(newData) !== '{}') {
       // uploadJSONDatabase(`raceData1.json`, file);
       raceData.push(newData);
 

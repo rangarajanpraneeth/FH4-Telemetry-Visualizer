@@ -142,16 +142,16 @@ server.on('message', packets => {
       posZ: data.carPositionZ,
       speed: data.carSpeed,
       throttle: data.inputThrottle,
-      brake: data.inputBrake, 
+      brake: data.inputBrake,
       clutch: data.inputClutch,
       handbrake: data.inputHandbrake,
       gear: data.inputGear,
       steering: data.inputSteering
    });
-   if(!JSON.stringify(newData) === '{}'){
+   if (!JSON.stringify(newData) === '{}') {
       // uploadJSONDatabase(`raceData1.json`, file);
       raceData.push(newData);
-      uploadJSONDatabase('raceData1.json', raceData)
+
    }
    // console.log(data);
 });
@@ -160,6 +160,8 @@ server.on('message', packets => {
 server.bind(PORT, HOST);
 
 process.on('SIGINT', () => {
+   uploadJSONDatabase('raceData1.json', raceData)
+
    console.log(`Exiting...`);
    process.exit();
 });

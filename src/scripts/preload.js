@@ -148,9 +148,11 @@ server.on('message', packets => {
       gear: data.inputGear,
       steering: data.inputSteering
    });
-   if(!JSON.stringify(newData) === '{}')
+   if(!JSON.stringify(newData) === '{}'){
       // uploadJSONDatabase(`raceData1.json`, file);
       raceData.push(newData);
+      uploadJSONDatabase('raceData1.json', raceData)
+   }
    // console.log(data);
 });
 

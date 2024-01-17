@@ -130,11 +130,15 @@ server.on('listening', () => {
    console.log(`Listening on ${address.address}:${address.port}`);
 });
 
+let raceData = [];
+
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
-   let file = getJSON('raceData1.json');
-   file.push({
+   // let file = getJSON('raceData1.json');
+   let file = raceData;
+   let newData = ({
+      timestamp: file.timestamp,
       posX: file.carPositionX,
       posY: file.carPositionY,
       posZ: file.carPositionZ,
@@ -146,9 +150,13 @@ server.on('message', packets => {
       gear: file.inputGear,
       steering: file.inputSteering
    });
-   uploadJSONDatabase(`raceData1.json`, file);
-   console.log(data);
+   if(!JSON.stringify(newData) === '{}')
+      // uploadJSONDatabase(`raceData1.json`, file);
+   raceData.push(newData);
+   // console.log(data);
 });
+
+uploadJSONDatabase(`raceData1.json`, file);
 
 server.bind(PORT, HOST);
 

@@ -8,6 +8,8 @@ let server = dgram.createSocket('udp4');
 
 const fToC = f => (f - 32) * 5 / 9;
 
+uploadJSONDatabase('raceData1.json', []);
+
 const parsePackets = packets => {
    return {
       inRace: packets.readInt32LE(0), // 1 in race 0 not in race
@@ -127,13 +129,24 @@ server.on('listening', () => {
    let address = server.address();
    console.log(`Listening on ${address.address}:${address.port}`);
 });
-let counter = 0;
+
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
-   let file = getJSON('test.json');
-   file.push(data);
-   uploadJSONDatabase(`test.json`, file);
+   let file = getJSON('raceData1.json');
+   file.push({
+      posX: file.carPositionX,
+      posY: file.carPositionY,
+      posZ: file.carPositionZ,
+      speed: file.carSpeed,
+      throttle: file.inputThrottle,
+      brake: file.inputBrake, 
+      clutch: file.inputClutch,
+      handbrake: file.inputHandbrake,
+      gear: file.inputGear,
+      steering: file.inputSteering
+   });
+   uploadJSONDatabase(`raceData1.json`, file);
    console.log(data);
 });
 
@@ -149,7 +162,7 @@ function getJSON(file) { //gets data from JSON file in a useable format
    return JSON.parse(fs.readFileSync(filePath));
 }
 
-function uploadJSONDatabase(file, data, bol) { //overwrites JSON file and uploads with data
+function uploadJSONDatabase(file, data) { //overwrites JSON file and uploads with data
    const filePath = path.join(__dirname, '../../database', file);
    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), {
       encoding: 'utf8',
@@ -158,3 +171,4 @@ function uploadJSONDatabase(file, data, bol) { //overwrites JSON file and upload
    console.log("Upload complete");
    return fs.readdirSync(path.join(__dirname, '../../database'));
 }
+

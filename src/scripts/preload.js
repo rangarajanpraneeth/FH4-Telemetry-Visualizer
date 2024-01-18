@@ -2,7 +2,7 @@ const fs = require('fs'); //json
 const path = require('path')
 const PORT = 2693;
 const HOST = '127.0.0.1'
-const csv = require('csv-parser');
+// const csv = require('csv-parser');
 
 const dgram = require('dgram');
 let server = dgram.createSocket('udp4');
@@ -150,10 +150,12 @@ server.on('message', packets => {
       // steering: data.inputSteering
    });
    let x = Object.values(newData).join(',');
-   if (JSON.stringify(newData) !== '{}') {
-      // uploadJSONDatabase(`raceData1.json`, file);
-      raceData.push(newData);
-   }
+
+   pushCSV('creampie.csv', x)
+   // if (JSON.stringify(newData) !== '{}') {
+   //    // uploadJSONDatabase(`raceData1.json`, file);
+   //    raceData.push(newData);
+   // }
 
    // console.log(data);
 });
@@ -161,7 +163,7 @@ server.on('message', packets => {
 server.bind(PORT, HOST);
 
 process.on('SIGINT', () => {
-   pushCSV('raceData2.json', raceData)
+   // pushCSV('raceData2.json', raceData)
 
    console.log(`Exiting...`);
    process.exit();

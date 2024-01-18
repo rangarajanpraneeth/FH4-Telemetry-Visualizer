@@ -137,19 +137,19 @@ server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
    let newData = ({
-      timestamp: data.timestamp,
+      // timestamp: data.timestamp,
       posX: data.carPositionX,
       posY: data.carPositionY,
       posZ: data.carPositionZ,
-      speed: data.carSpeed,
-      throttle: data.inputThrottle,
-      brake: data.inputBrake,
-      clutch: data.inputClutch,
-      handbrake: data.inputHandbrake,
-      gear: data.inputGear,
-      steering: data.inputSteering
+      // speed: data.carSpeed,
+      // throttle: data.inputThrottle,
+      // brake: data.inputBrake,
+      // clutch: data.inputClutch,
+      // handbrake: data.inputHandbrake,
+      // gear: data.inputGear,
+      // steering: data.inputSteering
    });
-   let x = Object.values(data).join(',');
+   let x = Object.values(newData).join(',');
    if (JSON.stringify(newData) !== '{}') {
       // uploadJSONDatabase(`raceData1.json`, file);
       raceData.push(newData);
@@ -157,7 +157,6 @@ server.on('message', packets => {
 
    // console.log(data);
 });
-
 
 server.bind(PORT, HOST);
 

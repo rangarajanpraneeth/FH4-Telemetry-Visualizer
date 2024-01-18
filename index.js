@@ -37,15 +37,3 @@
 // // x[0].a = '99';
 // // uploadJSONcsv('creampie.csv', x);
 // // console.log(getCSV('creampie.csv'));
-
-
-
-
-
-const a = {
-    a: 1,
-    b: 2
-}
-
-const values = ;
-    console.log();

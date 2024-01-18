@@ -2,6 +2,7 @@ const fs = require('fs'); //json
 const path = require('path')
 const PORT = 2693;
 const HOST = '127.0.0.1'
+const csv = require('csv-parser');
 
 const dgram = require('dgram');
 let server = dgram.createSocket('udp4');
@@ -148,11 +149,12 @@ server.on('message', packets => {
       gear: data.inputGear,
       steering: data.inputSteering
    });
+   let x = Object.values(data).join(',');
    if (JSON.stringify(newData) !== '{}') {
       // uploadJSONDatabase(`raceData1.json`, file);
       raceData.push(newData);
-
    }
+
    // console.log(data);
 });
 
@@ -160,7 +162,7 @@ server.on('message', packets => {
 server.bind(PORT, HOST);
 
 process.on('SIGINT', () => {
-   uploadJSONDatabase('raceData1.json', raceData)
+   pushCSV('raceData2.json', raceData)
 
    console.log(`Exiting...`);
    process.exit();
@@ -181,3 +183,33 @@ function uploadJSONDatabase(file, data) { //overwrites JSON file and uploads wit
    return fs.readdirSync(path.join(__dirname, '../../database'));
 }
 
+
+function getCSV(file) {
+   const filePath = path.join(__dirname, '../../database', file);
+   const csvData =  fs.readFileSync(filePath, 'utf-8');
+   const rows = csvData.split('\r\n').map(row => row.split(','));
+
+   const header = rows[0];
+   const jsonData = rows.slice(1).map(row => {
+       const obj = {};
+       header.forEach((key, index) => {
+           obj[key] = row[index];
+       });
+       return obj;
+   });
+
+   return jsonData;
+}
+
+function pushCSV(file, csvData) {
+   const filePath = path.join(__dirname, '../../database', file);
+
+   existingData = fs.readFileSync(filePath)
+   newData = existingData + '\n' + csvData;
+   fs.writeFileSync(filePath, newData, {
+       encoding: 'utf8',
+       flag: 'w'
+   });
+
+   console.log("Upload complete");
+}

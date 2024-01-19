@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import cm
 
 # only works in the same directory
 def get_csv_data_local(filename):
@@ -10,19 +11,21 @@ def get_csv_data_local(filename):
     return data
 
 def extract_xyz_arrays(data):
-    x_values = data['x'].to_numpy()
-    y_values = data['y'].to_numpy()
-    z_values = data['z'].to_numpy()
+    x_values = data['carPositionX'].to_numpy()
+    y_values = data['carPositionY'].to_numpy()
+    z_values = data['carPositionZ'].to_numpy()
     return x_values, y_values, z_values
 
-def plot_xy(x_values, y_values):
-    plt.plot(x_values, y_values, marker='o', linestyle='-', color='b', label='Data')
+def plot_xyz(x_values, y_values, z_values):
+    plt.style.use('dark_background')
+    plt.scatter(x_values, y_values, c=z_values, cmap='RdYlGn', marker='o', label='Data')
+    cbar = plt.colorbar()
+    cbar.set_label('Z Values')
     plt.xlabel('X Values')
     plt.ylabel('Y Values')
-    plt.title('X vs Y Plot')
-    plt.legend()
+    plt.title('Terrain')
     plt.show()
 
 csv_data = get_csv_data_local('creampie.csv')
 x_values, y_values, z_values = extract_xyz_arrays(csv_data)
-plot_xy(x_values, y_values)
+plot_xyz(x_values, y_values, z_values)

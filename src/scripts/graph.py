@@ -146,7 +146,7 @@ def plot_cVal(fileName, cVal):
     plt.style.use('dark_background')
     plt.scatter(x_values, y_values, c=cVal, cmap='RdYlGn', marker='o', label='Data')
     cbar = plt.colorbar()
-    cbar.set_label('Z Values')
+    cbar.set_label('cVal')
     plt.xlabel('X Values')
     plt.ylabel('Y Values')
     # plt.title('')

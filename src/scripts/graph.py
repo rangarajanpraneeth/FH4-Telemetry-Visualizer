@@ -129,7 +129,21 @@ def extract_csv(data):
 #         normalizedAIBrakeDifference
 #     )
 
-def plot_xy_terrain(x_values, y_values, z_values):
+# def plot_xy_terrain(x_values, y_values, z_values):
+#     plt.style.use('dark_background')
+#     plt.scatter(x_values, y_values, c=z_values, cmap='RdYlGn', marker='o', label='Data')
+#     cbar = plt.colorbar()
+#     cbar.set_label('Z Values')
+#     plt.xlabel('X Values')
+#     plt.ylabel('Y Values')
+#     plt.title('Terrain')
+#     plt.show()
+
+def plot_terrain(fileName):
+    data = extract_csv(get_csv_data_local('creampie.csv'))
+    x_values = data['carPositionX']
+    y_values = data['carPositionY']
+    z_values = data['carPositionZ']
     plt.style.use('dark_background')
     plt.scatter(x_values, y_values, c=z_values, cmap='RdYlGn', marker='o', label='Data')
     cbar = plt.colorbar()
@@ -141,4 +155,4 @@ def plot_xy_terrain(x_values, y_values, z_values):
 
 csv_data = get_csv_data_local('creampie.csv')
 csv = extract_csv(csv_data)
-plot_xy_terrain(csv['carPositionX'], csv['carPositionY'], csv['carPositionZ'])
+plot_terrain('creampie.csv')

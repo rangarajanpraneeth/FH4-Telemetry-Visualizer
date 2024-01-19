@@ -131,7 +131,9 @@ server.on('listening', () => {
    console.log(`Listening on ${address.address}:${address.port}`);
 });
 
-let raceData = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPMcarAccelerationX,carAccelerationY,carAccelerationZcarVelocityX,carVelocityY,carVelocityZcarAngularVelocityX,carAngularVelocityY,carAngularVelocityZcarYaw,carPitch,carRollsuspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRRtireSlipRatioFL, tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRRwheelRotationSpeedFL:, wheelRotationSpeedFR:,wheelRotationSpeedRL:,wheelRotationSpeedRR:wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRRwheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRRforceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRRtireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRRtireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRRsuspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRRcarID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCountcarPositionX,carPositionY,carPositionZcarSpeed,enginePower,engineTorquetireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRRengineBoost,engineFueldistanceTravelledraceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap:,racePositioninputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteeringnormalizedDrivingLine,normalizedAIBrakeDifference';
+let headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPMcarAccelerationX,carAccelerationY,carAccelerationZcarVelocityX,carVelocityY,carVelocityZcarAngularVelocityX,carAngularVelocityY,carAngularVelocityZcarYaw,carPitch,carRollsuspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRRtireSlipRatioFL, tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRRwheelRotationSpeedFL, wheelRotationSpeedFR,wheelRotationSpeedRL,wheelRotationSpeedRR,wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRRwheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRRforceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRRtireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRRtireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRRsuspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRRcarID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCountcarPositionX,carPositionY,carPositionZcarSpeed,enginePower,engineTorquetireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRRengineBoost,engineFueldistanceTravelledraceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap,racePositioninputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteeringnormalizedDrivingLine,normalizedAIBrakeDifference';
+
+let raceData = '';
 
 server.on('message', packets => {
    const data = parsePackets(packets);
@@ -151,7 +153,7 @@ server.on('message', packets => {
    });
    let x = Object.values(data).join(',');
       // pushCSV('creampie.csv', x);
-   raceData.push(x);
+   raceData += ('\n' + x);
    // if (JSON.stringify(newData) !== '{}') {
    //    // uploadJSONDatabase(`raceData1.json`, file);
    //    raceData.push(newData);

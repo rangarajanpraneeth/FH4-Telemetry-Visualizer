@@ -15,10 +15,10 @@ def plot_cVal(fileName, val):
     plt.style.use('dark_background')
     plt.scatter(data['carPositionX'], data['carPositionY'], c=cVal, cmap='RdYlGn_r', marker='o', label='Data')
     cbar = plt.colorbar()
-    cbar.set_label('cVal')
+    cbar.set_label(val)
     plt.xlabel('X Values')
     plt.ylabel('Y Values')
     plt.title(val)
     plt.show()
 
-plot_cVal('creampie.csv', 'tireTemperatureFR')
+plot_cVal('creampie.csv', 'carSpeed')

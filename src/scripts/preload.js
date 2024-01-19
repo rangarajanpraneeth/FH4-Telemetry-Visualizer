@@ -153,7 +153,8 @@ server.on('message', packets => {
    });
    let x = Object.values(data).join(',');
       // pushCSV('creampie.csv', x);
-   raceData += ('\n' + x);
+   if(inRace == 1)
+      raceData += ('\n' + x);
    // if (JSON.stringify(newData) !== '{}') {
    //    // uploadJSONDatabase(`raceData1.json`, file);
    //    raceData.push(newData);

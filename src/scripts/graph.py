@@ -21,4 +21,4 @@ def plot_cVal(fileName, val):
     plt.title(val)
     plt.show()
 
-plot_cVal('creampie.csv', 'inputGear')
+plot_cVal('creampie.csv', 'engineRPM')

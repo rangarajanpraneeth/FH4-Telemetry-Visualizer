@@ -131,7 +131,7 @@ server.on('listening', () => {
    console.log(`Listening on ${address.address}:${address.port}`);
 });
 
-// let raceData = '';
+let raceData = '';
 
 server.on('message', packets => {
    const data = parsePackets(packets);
@@ -150,10 +150,8 @@ server.on('message', packets => {
       steering: data.inputSteering
    });
    let x = Object.values(data).join(',');
-   //graph
-   // if(isRecording)
-      pushCSV('creampie.csv', x);
-   // raceData.push(x);
+      // pushCSV('creampie.csv', x);
+   raceData.push(x);
    // if (JSON.stringify(newData) !== '{}') {
    //    // uploadJSONDatabase(`raceData1.json`, file);
    //    raceData.push(newData);
@@ -165,7 +163,7 @@ server.on('message', packets => {
 server.bind(PORT, HOST);
 
 process.on('SIGINT', () => {
-   // pushCSV('raceData2.json', raceData);
+   pushCSV('raceData2.json', raceData);
 
    console.log(`Exiting...`);
    process.exit();

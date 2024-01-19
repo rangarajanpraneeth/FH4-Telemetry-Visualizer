@@ -8,8 +8,7 @@ let server = dgram.createSocket('udp4');
 
 const fToC = f => (f - 32) * 5 / 9;
 
-let fileCounter = 0;
-
+// let fileCounter = 0;
 
 const parsePackets = packets => {
    return {
@@ -138,22 +137,22 @@ let raceData = '';
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
-   let newData = ({
-      timestamp: data.timestamp,
-      posX: data.carPositionX,
-      posY: data.carPositionY,
-      posZ: data.carPositionZ,
-      speed: data.carSpeed,
-      throttle: data.inputThrottle,
-      brake: data.inputBrake,
-      clutch: data.inputClutch,
-      handbrake: data.inputHandbrake,
-      gear: data.inputGear,
-      steering: data.inputSteering
-   });
+   // let newData = ({
+   //    timestamp: data.timestamp,
+   //    posX: data.carPositionX,
+   //    posY: data.carPositionY,
+   //    posZ: data.carPositionZ,
+   //    speed: data.carSpeed,
+   //    throttle: data.inputThrottle,
+   //    brake: data.inputBrake,
+   //    clutch: data.inputClutch,
+   //    handbrake: data.inputHandbrake,
+   //    gear: data.inputGear,
+   //    steering: data.inputSteering
+   // });
    let x = Object.values(data).join(',');
       // pushCSV('creampie.csv', x);
-   if(inRace == 1)
+   if(data.inRace == 1)
       raceData += ('\n' + x);
    // if (JSON.stringify(newData) !== '{}') {
    //    // uploadJSONDatabase(`raceData1.json`, file);

@@ -1,15 +1,15 @@
 const fs = require('fs'); //json
-const path = require('path')
+const path = require('path');
 const PORT = 2693;
-const HOST = '127.0.0.1'
-// const csv = require('csv-parser');
+const HOST = '127.0.0.1';
 
 const dgram = require('dgram');
 let server = dgram.createSocket('udp4');
 
 const fToC = f => (f - 32) * 5 / 9;
 
-// uploadJSONDatabase('raceData1.json', []);
+let fileCounter = 0;
+
 
 const parsePackets = packets => {
    return {
@@ -131,27 +131,29 @@ server.on('listening', () => {
    console.log(`Listening on ${address.address}:${address.port}`);
 });
 
-let raceData = [];
+// let raceData = '';
 
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
    let newData = ({
-      // timestamp: data.timestamp,
+      timestamp: data.timestamp,
       posX: data.carPositionX,
       posY: data.carPositionY,
       posZ: data.carPositionZ,
-      // speed: data.carSpeed,
-      // throttle: data.inputThrottle,
-      // brake: data.inputBrake,
-      // clutch: data.inputClutch,
-      // handbrake: data.inputHandbrake,
-      // gear: data.inputGear,
-      // steering: data.inputSteering
+      speed: data.carSpeed,
+      throttle: data.inputThrottle,
+      brake: data.inputBrake,
+      clutch: data.inputClutch,
+      handbrake: data.inputHandbrake,
+      gear: data.inputGear,
+      steering: data.inputSteering
    });
-   let x = Object.values(newData).join(',');
-
-   pushCSV('creampie.csv', x)
+   let x = Object.values(data).join(',');
+   //graph
+   // if(isRecording)
+      pushCSV('creampie.csv', x);
+   // raceData.push(x);
    // if (JSON.stringify(newData) !== '{}') {
    //    // uploadJSONDatabase(`raceData1.json`, file);
    //    raceData.push(newData);
@@ -163,26 +165,26 @@ server.on('message', packets => {
 server.bind(PORT, HOST);
 
 process.on('SIGINT', () => {
-   // pushCSV('raceData2.json', raceData)
+   // pushCSV('raceData2.json', raceData);
 
    console.log(`Exiting...`);
    process.exit();
 });
 
-function getJSON(file) { //gets data from JSON file in a useable format
-   const filePath = path.join(__dirname, '../../database', file);
-   return JSON.parse(fs.readFileSync(filePath));
-}
+// function getJSON(file) { //gets data from JSON file in a useable format
+//    const filePath = path.join(__dirname, '../../database', file);
+//    return JSON.parse(fs.readFileSync(filePath));
+// }
 
-function uploadJSONDatabase(file, data) { //overwrites JSON file and uploads with data
-   const filePath = path.join(__dirname, '../../database', file);
-   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), {
-      encoding: 'utf8',
-      flag: 'w'
-   });
-   console.log("Upload complete");
-   return fs.readdirSync(path.join(__dirname, '../../database'));
-}
+// function uploadJSONDatabase(file, data) { //overwrites JSON file and uploads with data
+//    const filePath = path.join(__dirname, '../../database', file);
+//    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), {
+//       encoding: 'utf8',
+//       flag: 'w'
+//    });
+//    console.log("Upload complete");
+//    return fs.readdirSync(path.join(__dirname, '../../database'));
+// }
 
 
 function getCSV(file) {
@@ -205,12 +207,17 @@ function getCSV(file) {
 function pushCSV(file, csvData) {
    const filePath = path.join(__dirname, '../../database', file);
 
-   existingData = fs.readFileSync(filePath)
-   newData = existingData + '\n' + csvData;
+   let existingData = fs.readFileSync(filePath)
+   let newData = existingData + '\n' + csvData;
    fs.writeFileSync(filePath, newData, {
        encoding: 'utf8',
        flag: 'w'
    });
 
-   console.log("Upload complete");
+   // console.log("Upload complete");
+}
+
+function startRecording() {
+   
+   fileCounter++;
 }

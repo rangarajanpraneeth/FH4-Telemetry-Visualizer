@@ -23,7 +23,8 @@ def plot_space_cVal(fileName, val, vtype):
         initialTime = timestampArr[0]
         for i in range(len(timestampArr)):
             timestampArr[i] = timestampArr[i] - initialTime
-        plt.style.use('dark_background')
+        # plt.style.use('dark_background')
+        # plt.axis('equal')
         plt.scatter(timestampArr,cVal ,c=cVal, cmap='RdYlGn_r', marker='o', label='Data')
         plt.xlabel('Time')
         plt.ylabel(val)
@@ -34,4 +35,4 @@ def plot_space_cVal(fileName, val, vtype):
     plt.title(val)
     plt.show()
 
-plot_space_cVal('creampie.csv', 'carSpeed', 'space')
+plot_space_cVal('speed.csv', 'carSpeed', 'time')

@@ -139,20 +139,19 @@ def extract_csv(data):
 #     plt.title('Terrain')
 #     plt.show()
 
-def plot_terrain(fileName):
-    data = extract_csv(get_csv_data_local('creampie.csv'))
+def plot_cVal(fileName, cVal):
+    data = extract_csv(get_csv_data_local('fileName'))
     x_values = data['carPositionX']
     y_values = data['carPositionY']
-    z_values = data['carPositionZ']
     plt.style.use('dark_background')
-    plt.scatter(x_values, y_values, c=z_values, cmap='RdYlGn', marker='o', label='Data')
+    plt.scatter(x_values, y_values, c=cVal, cmap='RdYlGn', marker='o', label='Data')
     cbar = plt.colorbar()
     cbar.set_label('Z Values')
     plt.xlabel('X Values')
     plt.ylabel('Y Values')
-    plt.title('Terrain')
+    # plt.title('')
     plt.show()
 
 csv_data = get_csv_data_local('creampie.csv')
 csv = extract_csv(csv_data)
-plot_terrain('creampie.csv')
+plot_cVal('creampie.csv', csv['carPositionZ'])

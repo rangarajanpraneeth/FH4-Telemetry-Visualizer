@@ -9,16 +9,16 @@ def get_csv_data_local(filename):
 def extract_csv(data):
     return {column: data[column].to_numpy() for column in data.columns[data.notna().any()].tolist()}
 
-def plot_space_cVal(fileName, val, type):
+def plot_space_cVal(fileName, val, vtype):
     data = extract_csv(get_csv_data_local(fileName))
     cVal = data[val]
     plt.style.use('dark_background')
-    if type == 'space':
+    if vtype == 'space':
         plt.axis('equal')
-        plt.scatter(data['carPositionX'], data['carPositionY'], c=cVal, cmap='RdYlGn_r', marker='o', label='Data')
+        plt.scatter(data['carPositionX'], data['carPositionZ'], c=cVal, cmap='RdYlGn_r', marker='o', label='Data')
         plt.xlabel('X-Direction')
         plt.ylabel('Y-Direction')
-    elif type == 'time':
+    elif vtype == 'time':
         timestampArr = data['timestamp']
         initialTime = timestampArr[0]
         for i in range(len(timestampArr)):
@@ -34,4 +34,4 @@ def plot_space_cVal(fileName, val, type):
     plt.title(val)
     plt.show()
 
-plot_space_cVal('creampie.csv', 'carAccelerationX', 'space')
+plot_space_cVal('creampie.csv', 'carSpeed', 'space')

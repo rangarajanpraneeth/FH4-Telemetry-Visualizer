@@ -60,4 +60,4 @@ plot_space_cVal('creampie.csv', 'carPositionY', 'space')
 
 # Plot the 3D graph
 data = extract_csv(get_csv_data_local('creampie.csv'))
-plot_3d_graph(data['carPositionX'], data['carPositionY'], data['carPositionZ'])
+plot_3d_graph(data['carPositionX'], data['carPositionZ'], data['carPositionY'])

@@ -134,6 +134,8 @@ let headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelera
 
 let raceData = '';
 
+raceData += headers;
+
 server.on('message', packets => {
    const data = parsePackets(packets);
    renderVisualizer(data);
@@ -207,9 +209,9 @@ function getCSV(file) {
 function pushCSV(file, csvData) {
    const filePath = path.join(__dirname, '../../database', file);
 
-   let existingData = fs.readFileSync(filePath)
-   let newData = existingData + '\n' + csvData;
-   fs.writeFileSync(filePath, newData, {
+   // let existingData = fs.readFileSync(filePath)
+   // let newData = existingData + '\n' + csvData;
+   fs.writeFileSync(filePath, csvData, {
        encoding: 'utf8',
        flag: 'w'
    });

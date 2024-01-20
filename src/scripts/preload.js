@@ -138,7 +138,8 @@ raceData += headers;
 
 server.on('message', packets => {
    const data = parsePackets(packets);
-   renderVisualizer(data);
+   // renderVisualizer(data);
+   
    // let newData = ({
    //    timestamp: data.timestamp,
    //    posX: data.carPositionX,
@@ -189,22 +190,22 @@ process.on('SIGINT', () => {
 // }
 
 
-function getCSV(file) {
-   const filePath = path.join(__dirname, '../../database', file);
-   const csvData =  fs.readFileSync(filePath, 'utf-8');
-   const rows = csvData.split('\r\n').map(row => row.split(','));
+// function getCSV(file) {
+//    const filePath = path.join(__dirname, '../../database', file);
+//    const csvData =  fs.readFileSync(filePath, 'utf-8');
+//    const rows = csvData.split('\r\n').map(row => row.split(','));
 
-   const header = rows[0];
-   const jsonData = rows.slice(1).map(row => {
-       const obj = {};
-       header.forEach((key, index) => {
-           obj[key] = row[index];
-       });
-       return obj;
-   });
+//    const header = rows[0];
+//    const jsonData = rows.slice(1).map(row => {
+//        const obj = {};
+//        header.forEach((key, index) => {
+//            obj[key] = row[index];
+//        });
+//        return obj;
+//    });
 
-   return jsonData;
-}
+//    return jsonData;
+// }
 
 function pushCSV(file, csvData) {
    const filePath = path.join(__dirname, '../../database', file);
@@ -219,7 +220,7 @@ function pushCSV(file, csvData) {
    // console.log("Upload complete");
 }
 
-function startRecording() {
+// function startRecording() {
    
-   fileCounter++;
-}
+//    fileCounter++;
+// }

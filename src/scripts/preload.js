@@ -134,12 +134,13 @@ let headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelera
 
 let raceData = '';
 
-raceData += headers;
+raceData += 'timestamp\n';
+// raceData += headers;
 
 server.on('message', packets => {
    const data = parsePackets(packets);
    // renderVisualizer(data);
-   
+
    // let newData = ({
    //    timestamp: data.timestamp,
    //    posX: data.carPositionX,
@@ -153,7 +154,10 @@ server.on('message', packets => {
    //    gear: data.inputGear,
    //    steering: data.inputSteering
    // });
-   let x = Object.values(data).join(',');
+   let newData = {
+      timestamp: data.timestamp
+   }
+   let x = Object.values(newData).join(',');
       // pushCSV('creampie.csv', x);
    if(data.inRace == 1)
       raceData += (x + '\n');

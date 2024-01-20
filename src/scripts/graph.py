@@ -190,7 +190,6 @@ def graph2D(filePath, colorProperty, graphType):
     plt.show()
 
 
-<<<<<<< HEAD
     ax.set_xlabel('X Label')
     ax.set_ylabel('Y Label')
     ax.set_zlabel('Z Label')
@@ -211,6 +210,3 @@ plot_space_cVal('creampie.csv', 'carPositionY', 'space')
 # Plot the 3D graph
 data = extract_csv(get_csv_data_local('creampie.csv'))
 plot_3d_graph(data['carPositionX'], data['carPositionY'], data['carPositionZ'])
-=======
-graph2D("recording-1.csv", "inputGear", "space")
->>>>>>> 54415103c6ea7a0f86b040f7545612ca8304684e

@@ -135,42 +135,43 @@ let headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelera
 let raceData = '';
 
 raceData += 'timestamp\n';
-// raceData += headers;
 
-server.on('message', packets => {
-   const data = parsePackets(packets);
-   // renderVisualizer(data);
+let files = fs.readdirSync('./database');
+let numArr = files[files.length - 1].match(/\d+/g);
+let fileName = `raceData${parseInt(numArr ? numArr.map(Number) : []) + 1}.csv`;
+// let isRecording = false;
+let isRecording = true; //for now, normally make it false at startup
 
-   // let newData = ({
-   //    timestamp: data.timestamp,
-   //    posX: data.carPositionX,
-   //    posY: data.carPositionY,
-   //    posZ: data.carPositionZ,
-   //    speed: data.carSpeed,
-   //    throttle: data.inputThrottle,
-   //    brake: data.inputBrake,
-   //    clutch: data.inputClutch,
-   //    handbrake: data.inputHandbrake,
-   //    gear: data.inputGear,
-   //    steering: data.inputSteering
-   // });
-   let x = Object.values(data).join(',');
-   // pushCSV('creampie.csv', x);
-   if (data.inRace == 1)
-      raceData += ('\n' + x);
-   // if (JSON.stringify(newData) !== '{}') {
-   //    // uploadJSONDatabase(`raceData1.json`, file);
-   //    raceData.push(newData);
-   // }
-
-   // console.log(data);
-});
+function loop() {
+   server.on('message', packets => {
+      const data = parsePackets(packets);
+      // renderVisualizer(data3);
+      // data = ({
+      //    timestamp: data.timestamp,
+      //    posX: data.carPositionX,
+      //    posY: data.carPositionY,
+      //    posZ: data.carPositionZ,
+      //    speed: data.carSpeed,
+      //    throttle: data.inputThrottle,
+      //    brake: data.inputBrake,
+      //    clutch: data.inputClutch,
+      //    handbrake: data.inputHandbrake,
+      //    gear: data.inputGear,
+      //    steering: data.inputSteering
+      // });
+      let x = Object.values(data).join(',');
+      // pushCSV('creampie.csv', x);
+      if (data.inRace == 1 && isRecording)
+         raceData += ('\n' + x);
+      // console.log(data);
+   });
+}
 
 server.bind(PORT, HOST);
 
 process.on('SIGINT', () => {
-   pushCSV('raceData2.json', raceData);
-
+   // pushCSV(fileName, raceData);
+   buttonClose();
    console.log(`Exiting...`);
    process.exit();
 });
@@ -188,8 +189,6 @@ function getCSV(file) {
       });
       return obj;
    });
-
-   //return jsonData;
 }
 
 function pushCSV(file, csvData) {
@@ -200,21 +199,19 @@ function pushCSV(file, csvData) {
       encoding: 'utf8',
       flag: 'w'
    });
-
-   // console.log("Upload complete");
 }
 
-function buttonClicked() {
+function buttonSetup() {
    const headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelerationX,carAccelerationY,carAccelerationZ,carVelocityX,carVelocityY,carVelocityZ,carAngularVelocityX,carAngularVelocityY,carAngularVelocityZ,carYaw,carPitch,carRoll,suspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRR,tireSlipRatioFL,tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRR,wheelRotationSpeedFL,wheelRotationSpeedFR,wheelRotationSpeedRL,wheelRotationSpeedRR,wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRR,wheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRR,forceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRR,tireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRR,tireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRR,suspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRR,carID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCount,carPositionX,carPositionY,carPositionZ,carSpeed,enginePower,engineTorque,tireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRR,engineBoost,engineFuel,distanceTravelled,raceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap,racePosition,inputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteering,normalizedDrivingLine,normalizedAIBrakeDifference';
-   const files = fs.readdirSync('./database');
-   const numArr = files[files.length - 1].match(/\d+/g);
-   const fileName = `raceData${parseInt(numArr ? numArr.map(Number) : []) + 1}.csv`;
-   console.log(files)
+   files = fs.readdirSync('./database');
+   numArr = files[files.length - 1].match(/\d+/g);
+   fileName = `raceData${parseInt(numArr ? numArr.map(Number) : []) + 1}.csv`;
    fs.writeFileSync(path.join('./database', fileName), headers);
+   isRecording = true;
 }
 
-function startRecording() {
-   fileCounter++;
+function buttonClose() {
+   pushCSV(fileName, raceData);
+   isRecording = false;
 }
 
-buttonClicked();

@@ -51,7 +51,7 @@
 
 #     plt.show()
 
-# plot_space_cVal('creampie.csv', 'carPositionY', 'space')
+# plot_space_cVal('testing.csv', 'carPositionY', 'space')
 
 # # Example data
 # # x_data = [1, 2, 3, 4, 5]
@@ -59,8 +59,9 @@
 # # z_data = [5, 6, 7, 8, 9]
 
 # # Plot the 3D graph
-# data = extract_csv(get_csv_data_local('creampie.csv'))
+# data = extract_csv(get_csv_data_local('testing.csv'))
 # plot_3d_graph(data['carPositionX'], data['carPositionZ'], data['carPositionY'])
+
 
 
 
@@ -111,4 +112,4 @@ def graph2D(filePath, colorProperty, graphType):
     plt.show()
 
 
-graph2D("creampie.csv", "carSpeed", "space")
+graph2D("testing.csv", "carSpeed", "space")

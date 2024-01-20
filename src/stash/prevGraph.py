@@ -21,7 +21,7 @@ def plot_cVal(fileName, val):
     plt.title(val)
     plt.show()
 
-plot_cVal('creampie.csv', 'carSpeed')
+plot_cVal('testing.csv', 'carSpeed')
 
 
 

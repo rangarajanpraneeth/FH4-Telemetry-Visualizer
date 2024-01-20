@@ -47,6 +47,7 @@ def plot_3d_graph(x, y, z):
     ax.set_zlabel('Z Label')
     # ax.set_aspect('equal')
     ax.axis('equal')
+    
     # ax.set_box_aspect([1, 1, 1], adjustable='box')
 
     plt.show()

@@ -130,8 +130,6 @@ server.on('listening', () => {
    console.log(`Listening on ${address.address}:${address.port}`);
 });
 
-let headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelerationX,carAccelerationY,carAccelerationZ,carVelocityX,carVelocityY,carVelocityZ,carAngularVelocityX,carAngularVelocityY,carAngularVelocityZ,carYaw,carPitch,carRoll,suspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRR,tireSlipRatioFL,tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRR,wheelRotationSpeedFL,wheelRotationSpeedFR,wheelRotationSpeedRL,wheelRotationSpeedRR,wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRR,wheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRR,forceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRR,tireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRR,tireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRR,suspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRR,carID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCount,carPositionX,carPositionY,carPositionZ,carSpeed,enginePower,engineTorque,tireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRR,engineBoost,engineFuel,distanceTravelled,raceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap,racePosition,inputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteering,normalizedDrivingLine,normalizedAIBrakeDifference';
-
 let raceData = '';
 
 server.on('message', packets => {
@@ -151,8 +149,8 @@ server.on('message', packets => {
    //    steering: data.inputSteering
    // });
    let x = Object.values(data).join(',');
-      // pushCSV('creampie.csv', x);
-   if(data.inRace == 1)
+   // pushCSV('creampie.csv', x);
+   if (data.inRace == 1)
       raceData += ('\n' + x);
    // if (JSON.stringify(newData) !== '{}') {
    //    // uploadJSONDatabase(`raceData1.json`, file);
@@ -171,34 +169,18 @@ process.on('SIGINT', () => {
    process.exit();
 });
 
-// function getJSON(file) { //gets data from JSON file in a useable format
-//    const filePath = path.join(__dirname, '../../database', file);
-//    return JSON.parse(fs.readFileSync(filePath));
-// }
-
-// function uploadJSONDatabase(file, data) { //overwrites JSON file and uploads with data
-//    const filePath = path.join(__dirname, '../../database', file);
-//    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), {
-//       encoding: 'utf8',
-//       flag: 'w'
-//    });
-//    console.log("Upload complete");
-//    return fs.readdirSync(path.join(__dirname, '../../database'));
-// }
-
-
 function getCSV(file) {
    const filePath = path.join(__dirname, '../../database', file);
-   const csvData =  fs.readFileSync(filePath, 'utf-8');
+   const csvData = fs.readFileSync(filePath, 'utf-8');
    const rows = csvData.split('\r\n').map(row => row.split(','));
 
    const header = rows[0];
    const jsonData = rows.slice(1).map(row => {
-       const obj = {};
-       header.forEach((key, index) => {
-           obj[key] = row[index];
-       });
-       return obj;
+      const obj = {};
+      header.forEach((key, index) => {
+         obj[key] = row[index];
+      });
+      return obj;
    });
 
    return jsonData;
@@ -206,18 +188,28 @@ function getCSV(file) {
 
 function pushCSV(file, csvData) {
    const filePath = path.join(__dirname, '../../database', file);
-
    let existingData = fs.readFileSync(filePath)
    let newData = existingData + '\n' + csvData;
    fs.writeFileSync(filePath, newData, {
-       encoding: 'utf8',
-       flag: 'w'
+      encoding: 'utf8',
+      flag: 'w'
    });
 
    // console.log("Upload complete");
 }
 
+function buttonClicked() {
+   const headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelerationX,carAccelerationY,carAccelerationZ,carVelocityX,carVelocityY,carVelocityZ,carAngularVelocityX,carAngularVelocityY,carAngularVelocityZ,carYaw,carPitch,carRoll,suspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRR,tireSlipRatioFL,tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRR,wheelRotationSpeedFL,wheelRotationSpeedFR,wheelRotationSpeedRL,wheelRotationSpeedRR,wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRR,wheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRR,forceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRR,tireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRR,tireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRR,suspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRR,carID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCount,carPositionX,carPositionY,carPositionZ,carSpeed,enginePower,engineTorque,tireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRR,engineBoost,engineFuel,distanceTravelled,raceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap,racePosition,inputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteering,normalizedDrivingLine,normalizedAIBrakeDifference';
+   const files = fs.readdirSync('./database');
+   const numArr = files[files.length - 1].match(/\d+/g);
+   const fileName = `raceData${parseInt(numArr ? numArr.map(Number) : []) + 1}.csv`;
+   console.log(files)
+   fs.writeFileSync(path.join('./database', fileName), headers);
+}
+
 function startRecording() {
-   
+
    fileCounter++;
 }
+
+buttonClicked();

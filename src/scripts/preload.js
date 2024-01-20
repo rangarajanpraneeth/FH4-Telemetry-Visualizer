@@ -8,8 +8,6 @@ let server = dgram.createSocket('udp4');
 
 const fToC = f => (f - 32) * 5 / 9;
 
-// let fileCounter = 0;
-
 const parsePackets = packets => {
    return {
       inRace: packets.readInt32LE(0), // 1 in race 0 not in race
@@ -123,29 +121,19 @@ const parsePackets = packets => {
    }
 }
 
-const renderVisualizer = data => { }
-
 server.on('listening', () => {
    let address = server.address();
    console.log(`Listening on ${address.address}:${address.port}`);
 });
 
-let headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelerationX,carAccelerationY,carAccelerationZ,carVelocityX,carVelocityY,carVelocityZ,carAngularVelocityX,carAngularVelocityY,carAngularVelocityZ,carYaw,carPitch,carRoll,suspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRR,tireSlipRatioFL,tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRR,wheelRotationSpeedFL,wheelRotationSpeedFR,wheelRotationSpeedRL,wheelRotationSpeedRR,wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRR,wheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRR,forceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRR,tireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRR,tireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRR,suspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRR,carID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCount,carPositionX,carPositionY,carPositionZ,carSpeed,enginePower,engineTorque,tireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRR,engineBoost,engineFuel,distanceTravelled,raceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap,racePosition,inputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteering,normalizedDrivingLine,normalizedAIBrakeDifference';
+var raceData = 'timestamp\n';
 
-let raceData = '';
+var files, numArr, fileName;
+updateFiles();
 
-raceData += 'timestamp\n';
-
-let files = fs.readdirSync('./database');
-let numArr = files[files.length - 1].match(/\d+/g);
-let fileName = `raceData${parseInt(numArr ? numArr.map(Number) : []) + 1}.csv`;
-// let isRecording = false;
-let isRecording = true; //for now, normally make it false at startup
-
-function loop() {
+function startLoop() {
    server.on('message', packets => {
       const data = parsePackets(packets);
-      // renderVisualizer(data3);
       // data = ({
       //    timestamp: data.timestamp,
       //    posX: data.carPositionX,
@@ -160,21 +148,19 @@ function loop() {
       //    steering: data.inputSteering
       // });
       let x = Object.values(data).join(',');
-      // pushCSV('creampie.csv', x);
-      if (data.inRace == 1 && isRecording)
+      if (data.inRace == 1)
          raceData += ('\n' + x);
-      // console.log(data);
    });
 }
 
 server.bind(PORT, HOST);
 
-process.on('SIGINT', () => {
-   // pushCSV(fileName, raceData);
-   buttonClose();
-   console.log(`Exiting...`);
-   process.exit();
-});
+function exit() {
+   process.on('SIGINT', () => {
+      console.log(`Exiting...`);
+      process.exit();
+   });
+}
 
 function getCSV(file) {
    const filePath = path.join(__dirname, '../../database', file);
@@ -201,17 +187,20 @@ function pushCSV(file, csvData) {
    });
 }
 
-function buttonSetup() {
-   const headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelerationX,carAccelerationY,carAccelerationZ,carVelocityX,carVelocityY,carVelocityZ,carAngularVelocityX,carAngularVelocityY,carAngularVelocityZ,carYaw,carPitch,carRoll,suspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRR,tireSlipRatioFL,tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRR,wheelRotationSpeedFL,wheelRotationSpeedFR,wheelRotationSpeedRL,wheelRotationSpeedRR,wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRR,wheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRR,forceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRR,tireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRR,tireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRR,suspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRR,carID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCount,carPositionX,carPositionY,carPositionZ,carSpeed,enginePower,engineTorque,tireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRR,engineBoost,engineFuel,distanceTravelled,raceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap,racePosition,inputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteering,normalizedDrivingLine,normalizedAIBrakeDifference';
+function updateFiles() {
    files = fs.readdirSync('./database');
    numArr = files[files.length - 1].match(/\d+/g);
    fileName = `raceData${parseInt(numArr ? numArr.map(Number) : []) + 1}.csv`;
+}
+
+function startRecording() {
+   const headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelerationX,carAccelerationY,carAccelerationZ,carVelocityX,carVelocityY,carVelocityZ,carAngularVelocityX,carAngularVelocityY,carAngularVelocityZ,carYaw,carPitch,carRoll,suspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRR,tireSlipRatioFL,tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRR,wheelRotationSpeedFL,wheelRotationSpeedFR,wheelRotationSpeedRL,wheelRotationSpeedRR,wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRR,wheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRR,forceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRR,tireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRR,tireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRR,suspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRR,carID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCount,carPositionX,carPositionY,carPositionZ,carSpeed,enginePower,engineTorque,tireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRR,engineBoost,engineFuel,distanceTravelled,raceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap,racePosition,inputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteering,normalizedDrivingLine,normalizedAIBrakeDifference';
+   updateFiles();
    fs.writeFileSync(path.join('./database', fileName), headers);
-   isRecording = true;
+   startLoop();
 }
 
-function buttonClose() {
+function stopRecording() {
    pushCSV(fileName, raceData);
-   isRecording = false;
+   exit();
 }
-

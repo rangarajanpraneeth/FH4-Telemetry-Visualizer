@@ -66,4 +66,4 @@ def graph2D(filePath, colorProperty, graphType):
 
     plt.show()
 
-graph2D('testing.csv', 'inputSteering', 'time')
+graph2D('testing.csv', 'engineRPM', 'space')

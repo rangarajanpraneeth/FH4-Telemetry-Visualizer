@@ -127,10 +127,10 @@ server.on('listening', () => {
    let address = server.address();
    console.log(`Listening on ${address.address}:${address.port}`);
    fs.writeFileSync(path.join('./database', 'liveData.csv'), headers);
+   // startLoop();
 });
 
 function startLoop() {
-   console.log('hi');
    server.on('message', packets => {
       const data = parsePackets(packets);
       // data = ({

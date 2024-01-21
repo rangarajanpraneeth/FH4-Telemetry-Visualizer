@@ -126,10 +126,6 @@ server.on('listening', () => {
    console.log(`Listening on ${address.address}:${address.port}`);
 });
 
-var raceData = 'timestamp\n';
-
-var files, numArr, fileName;
-updateFiles();
 
 function startLoop() {
    server.on('message', packets => {
@@ -154,13 +150,6 @@ function startLoop() {
 }
 
 server.bind(PORT, HOST);
-
-function exit() {
-   process.on('SIGINT', () => {
-      console.log(`Exiting...`);
-      process.exit();
-   });
-}
 
 function getCSV(file) {
    const filePath = path.join(__dirname, '../../database', file);
@@ -201,7 +190,18 @@ function startRecording() {
 }
 
 function stopRecording() {
+   process.on('SIGINT', () => {
+      console.log(`Exiting...`);
+      process.exit();
+   });
    pushCSV(fileName, raceData);
-   exit();
 }
 
+var raceData = 'timestamp\n';
+
+var files, numArr, fileName;
+updateFiles();
+//just for now
+startRecording();
+stopRecording();
+//

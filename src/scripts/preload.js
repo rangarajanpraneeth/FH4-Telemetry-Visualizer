@@ -202,6 +202,6 @@ var raceData = 'timestamp\n';
 var files, numArr, fileName;
 updateFiles();
 //just for now
-startRecording();
-stopRecording();
+// startRecording();
+// stopRecording();
 //

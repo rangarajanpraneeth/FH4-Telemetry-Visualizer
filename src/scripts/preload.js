@@ -126,9 +126,12 @@ const parsePackets = packets => {
 server.on('listening', () => {
    let address = server.address();
    console.log(`Listening on ${address.address}:${address.port}`);
-   fs.writeFileSync(path.join('./database', 'liveData.csv'), headers);
-   // startLoop();
+   resetLiveData();
 });
+
+function resetLiveData() {
+   fs.writeFileSync(path.join('./database', 'liveData.csv'), headers);
+}
 
 function startLoop() {
    server.on('message', packets => {

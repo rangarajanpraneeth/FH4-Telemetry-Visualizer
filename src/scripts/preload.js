@@ -204,3 +204,4 @@ function stopRecording() {
    pushCSV(fileName, raceData);
    exit();
 }
+

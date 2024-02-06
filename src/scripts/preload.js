@@ -1,15 +1,81 @@
-
-//working code fs
-const fs = require('fs'); //json
+const fs = require('fs');
 const path = require('path');
-const PORT = 2693;
-const HOST = '127.0.0.1';
-
 const dgram = require('dgram');
 let server = dgram.createSocket('udp4');
 
+const PORT = 2693;
+const HOST = '127.0.0.1';
+
+// recording related variables
+const HEADERS_PATH = path.join(__dirname, './constants', 'headers.txt');
+const HEADERS = fs.readFileSync(HEADERS_PATH, 'utf-8');
+let RECORDING = false;
+let RACE_DATA = '';
+
+const {
+   classes,
+   drivetrains
+} = require('./constants/constants')
+
+
+
+// set local time and date
+const prefs = { hour: '2-digit', minute: '2-digit' }
+let dateContainer = document.querySelector('.date');
+let timeContainer = document.querySelector('.time');
+
+const raw = new Date();
+let date = `${raw.getMonth() + 1}/${raw.getDate()}/${raw.getFullYear()}`;
+let time = new Date().toLocaleTimeString('en-US', prefs);
+dateContainer.innerHTML = date;
+timeContainer.innerHTML = time.replace(/^0+/, '');
+
+setInterval(function () {
+   const raw = new Date();
+   let date = `${raw.getMonth() + 1}/${raw.getDate()}/${raw.getFullYear()}`;
+   let time = new Date().toLocaleTimeString('en-US', prefs);
+   dateContainer.innerHTML = date;
+   timeContainer.innerHTML = time.replace(/^0+/, '');
+}, 1000);
+
+
+
+// global utility functions
 const fToC = f => (f - 32) * 5 / 9;
-const headers = 'inRace,timestamp,engineMaxRPM,engineIdleRPM,engineRPM,carAccelerationX,carAccelerationY,carAccelerationZ,carVelocityX,carVelocityY,carVelocityZ,carAngularVelocityX,carAngularVelocityY,carAngularVelocityZ,carYaw,carPitch,carRoll,suspensionTravelNormalizedFL,suspensionTravelNormalizedFR,suspensionTravelNormalizedRL,suspensionTravelNormalizedRR,tireSlipRatioFL,tireSlipRatioFR,tireSlipRatioRL,tireSlipRatioRR,wheelRotationSpeedFL,wheelRotationSpeedFR,wheelRotationSpeedRL,wheelRotationSpeedRR,wheelOnRumbleFL,wheelOnRumbleFR,wheelOnRumbleRL,wheelOnRumbleRR,wheelInPuddleDepthFL,wheelInPuddleDepthFR,wheelInPuddleDepthRL,wheelInPuddleDepthRR,forceFeedbackRumbleFL,forceFeedbackRumbleFR,forceFeedbackRumbleRL,forceFeedbackRumbleRR,tireSlipAngleFL,tireSlipAngleFR,tireSlipAngleRL,tireSlipAngleRR,tireSlipCombinedFL,tireSlipCombinedFR,tireSlipCombinedRL,tireSlipCombinedRR,suspensionTravelFL,suspensionTravelFR,suspensionTravelRL,suspensionTravelRR,carID,carPerformanceClass,carPerformanceIndex,carDrivetrainType,carCylinderCount,carPositionX,carPositionY,carPositionZ,carSpeed,enginePower,engineTorque,tireTemperatureFL,tireTemperatureFR,tireTemperatureRL,tireTemperatureRR,engineBoost,engineFuel,distanceTravelled,raceBestLap,raceLastLap,raceCurrentLap,raceTime,raceLap,racePosition,inputThrottle,inputBrake,inputClutch,inputHandbrake,inputGear,inputSteering,normalizedDrivingLine,normalizedAIBrakeDifference';
+
+
+
+// recording functions
+const startRecording = () => {
+   // return if already recording
+   if (RECORDING) return;
+   console.log('Started recording');
+   RECORDING = true;
+}
+
+const pauseRecording = () => {
+   // return if not already recording
+   if (!RECORDING) return;
+   console.log('Paused recording');
+   RECORDING = false;
+}
+
+const stopRecording = () => {
+   // return if not already recording
+   if (!RECORDING) return;
+   console.log('Stopped recording');
+   RECORDING = false;
+
+   const fileName = String(Date.now());
+   const filePath = path.join(__dirname, './data', `${fileName}.csv`);
+   fs.writeFileSync(filePath, HEADERS + RACE_DATA, {
+      encoding: 'utf-8',
+      flag: 'w'
+   });
+
+   RACE_DATA = '';
+}
+
 const parsePackets = packets => {
    return {
       inRace: packets.readInt32LE(0), // 1 in race 0 not in race
@@ -90,9 +156,9 @@ const parsePackets = packets => {
       carPositionY: packets.readFloatLE(248),
       carPositionZ: packets.readFloatLE(252),
 
-      carSpeed: Math.round(packets.readFloatLE(256)), // meters per second
-      enginePower: packets.readFloatLE(260) / 746, // watts
-      engineTorque: packets.readFloatLE(264), // newton meters
+      carSpeed: Math.round(packets.readFloatLE(256) * 2.237), // meters per second
+      enginePower: packets.readFloatLE(260) / 745.7, // watts
+      engineTorque: packets.readFloatLE(264) / 1.356, // newton meters
 
       tireTemperatureFL: fToC(packets.readFloatLE(268)), // farenheit
       tireTemperatureFR: fToC(packets.readFloatLE(272)),
@@ -126,128 +192,41 @@ const parsePackets = packets => {
 server.on('listening', () => {
    let address = server.address();
    console.log(`Listening on ${address.address}:${address.port}`);
-   resetLiveData();
 });
 
-function resetLiveData() {
-   clearInterval(loopInterval2);
-   fs.writeFileSync(path.join('./database', 'liveData.csv'), headers);
-   runLiveData();
+// display function
+const populateRenderer = (data) => {
+   document.querySelector('.race__lap').innerHTML = data.raceLap;
+   if (data.racePosition === 0) document.querySelector('.race__position').innerHTML = '--/--';
+   else document.querySelector('.race__position').innerHTML = `${data.racePosition}/12`;
+
+   if (data.inRace === 0) {
+      document.querySelector('.status').classList.remove('green');
+      document.querySelector('.status').classList.add('red');
+      document.querySelector('.status').innerHTML = 'NOT RACING'
+   } else if (data.inRace === 1) {
+      document.querySelector('.status').classList.remove('red');
+      document.querySelector('.status').classList.add('green');
+      document.querySelector('.status').innerHTML = 'RACING'
+   }
+
+   document.querySelector('.race__time').innerHTML = Math.round(data.raceTime * 1000) / 1000;
+   document.querySelector('.position').innerHTML = `
+   ${Math.round(data.carPositionX)},
+   ${Math.round(data.carPositionY)},
+   ${Math.round(data.carPositionZ)}
+   `
 }
 
-// var counter = 0;
-
-function runLiveData() {
-   loopInterval2 = setInterval(() => {
-      // let x = counter;
-      // counter++;
-      // pushCSV('liveData.csv', x);
-      server.on('message', packets => {
-         let data = parsePackets(packets);
-         // data = ({
-         //    timestamp: data.timestamp,
-         //    posX: data.carPositionX,
-         //    posY: data.carPositionY,
-         //    posZ: data.carPositionZ,
-         //    speed: data.carSpeed,
-         //    throttle: data.inputThrottle,
-         //    brake: data.inputBrake,
-         //    clutch: data.inputClutch,
-         //    handbrake: data.inputHandbrake,
-         //    gear: data.inputGear,
-         //    steering: data.inputSteering
-         // });
-         let x = Object.values(data).join(',');
-         if (data.inRace == 1) {
-            raceData += ('\n' + x);
-            pushCSV('liveData.csv', x);
-         }
-      })
-   }, 1);
-}
-
-function startLoop() {
-   loopInterval1 = setInterval(() => {
-      server.on('message', packets => {
-         let data = parsePackets(packets);
-         // data = ({
-         //    timestamp: data.timestamp,
-         //    posX: data.carPositionX,
-         //    posY: data.carPositionY,
-         //    posZ: data.carPositionZ,
-         //    speed: data.carSpeed,
-         //    throttle: data.inputThrottle,
-         //    brake: data.inputBrake,
-         //    clutch: data.inputClutch,
-         //    handbrake: data.inputHandbrake,
-         //    gear: data.inputGear,
-         //    steering: data.inputSteering
-         // });
-         let x = Object.values(data).join(',');
-         if (data.inRace == 1) {
-            raceData += ('\n' + x);
-            pushCSV(fileName, x);
-         }
-      })
-      // let x = '1,2,3,4,5,6,7';
-      // // raceData += ('\n' + x);
-      // pushCSV(fileName, x);
-      // console.log('uploading to ' + fileName);
-   }, 1);
-}
+server.on('message', packets => {
+   const data = parsePackets(packets);
+   if (RECORDING && data.inRace === 1) RACE_DATA += `\n${Object.values(data).join(',')}`;
+   populateRenderer(data);
+});
 
 server.bind(PORT, HOST);
 
-function getCSV(file) {
-   const filePath = path.join(__dirname, '../../database', file);
-   const csvData = fs.readFileSync(filePath, 'utf-8');
-   const rows = csvData.split('\r\n').map(row => row.split(','));
-
-   const header = rows[0];
-   const jsonData = rows.slice(1).map(row => {
-      const obj = {};
-      header.forEach((key, index) => {
-         obj[key] = row[index];
-      });
-      return obj;
-   });
-}
-
-function pushCSV(file, csvData) {
-   const filePath = path.join(__dirname, '../database', file);
-   let existingData = fs.readFileSync(filePath)
-   let newData = existingData + '\n' + csvData;
-   fs.writeFileSync(filePath, newData, {
-      encoding: 'utf8',
-      flag: 'w'
-   });
-}
-
-function updateFiles() {
-   files = fs.readdirSync('./database');
-   numArr = files[files.length - 1].match(/\d+/g);
-   fileName = `raceData${parseInt(numArr ? numArr.map(Number) : []) + 1}.csv`;
-   if(fileName == 'raceDataNaN.csv')
-      fileName = 'raceData1.csv';
-   raceData = '';
-}
-
-function startRecording() {
-   updateFiles();
-   fs.writeFileSync(path.join('./database', fileName), headers);
-   startLoop();
-}
-
-function stopRecording() {
-   process.on('SIGINT', () => {
-      console.log(`Exiting...`);
-      process.exit();
-   });
-   pushCSV(fileName, raceData);
-   clearInterval(loopInterval1);
-}
-
-
-var files, numArr, fileName, loopInterval2, loopInterval1;
-updateFiles();
-runLiveData();
+process.on('SIGINT', () => {
+   console.log(`Exiting...`);
+   process.exit();
+});

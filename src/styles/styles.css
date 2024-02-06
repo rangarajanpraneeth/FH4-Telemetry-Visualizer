@@ -1,0 +1,62 @@
+/* COMMON */
+
+* {
+   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+   box-sizing: border-box;
+   user-select: none;
+   font-weight: 500;
+   line-height: 1;
+   padding: 0;
+   margin: 0;
+}
+
+body {
+   background-color: black;
+   color: white;
+}
+
+*::-webkit-scrollbar {
+   display: none;
+}
+
+.mb1 {
+   margin-bottom: 1rem;
+}
+
+.line {
+   display: flex;
+   justify-content: space-between;
+}
+
+.attribute {
+   color: #777;
+}
+
+.value {
+   color: #ccc;
+}
+
+/* USER INTERFACE */
+
+.wrapper {
+   display: grid;
+   grid-template-columns: 4fr 8fr 4fr;
+   height: 100vh;
+   width: 100vw;
+}
+
+.gauges {
+   display: flex;
+   flex-direction: column;
+}
+
+.gauge {
+   background-color: #111;
+   padding: 1rem;
+   height: 100%;
+   width: 100%;
+}
+
+.dashboard {
+   background-color: #000;
+}

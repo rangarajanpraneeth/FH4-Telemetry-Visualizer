@@ -71,4 +71,4 @@ def graph2D(filePath, colorProperty, graphType):
     plt.show()
 
 
-graph2D("1706588888204.csv", "carSpeed", "space")
+graph2D("recording-1.csv", "carSpeed", "space")

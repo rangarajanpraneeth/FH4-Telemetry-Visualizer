@@ -1,1 +1,0 @@
-# Forza Horizon 4 telemetry visualizer

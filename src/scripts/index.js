@@ -5,18 +5,17 @@ const isDeveloper = true;
 
 const createWindow = () => {
    const window = new BrowserWindow({
-      fullscreen: true,
+      // fullscreen: true,
       width: 1600,
       height: 900,
-      minWidth: 1600,
-      minHeight: 800,
+      minWidth: 800,
+      minHeight: 450,
       webPreferences: {
          nodeIntegration: true,
          contextIsolation: false,
-         preload: path.join(__dirname, './preload.js')
       }
    });
-
+   window.setMenuBarVisibility(false);
    if (isDeveloper) window.webContents.openDevTools();
    window.loadFile(path.join(__dirname, '../index.html'));
 }

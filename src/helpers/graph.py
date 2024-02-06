@@ -1,11 +1,9 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-
 from matplotlib.ticker import MaxNLocator
 
-
-def graph2D(filePath, colorProperty, graphType):
+def graph(filePath, colorProperty, graphType):
     dataFrame = pd.read_csv(
         os.path.abspath(os.path.join(os.path.dirname(__file__), "../data", filePath))
     )
@@ -25,9 +23,7 @@ def graph2D(filePath, colorProperty, graphType):
             c=dataFrame[colorProperty],
             cmap=cmap,
         )
-
         cb = plt.colorbar(label=colorProperty)
-
         if colorProperty == "inputGear":
             cb.locator = MaxNLocator(integer=True)
             cb.update_ticks()
@@ -71,4 +67,4 @@ def graph2D(filePath, colorProperty, graphType):
     plt.show()
 
 
-graph2D("recording-1.csv", "carSpeed", "space")
+graph("recording-1.csv", "carSpeed", "space")

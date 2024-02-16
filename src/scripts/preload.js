@@ -46,10 +46,6 @@ const stopRecording = () => {
    RACE_DATA = '';
 }
 
-function disp() {
-   console.log('hi')
-}
-
 // const parsePackets = packets => {
 //    return {
 //       inRace: packets.readInt32LE(0), // 1 in race 0 not in race
@@ -182,7 +178,7 @@ server.on('message', packets => {
    const data = parsePackets(packets);
    if (RECORDING && data.inRace === 1) RACE_DATA += `\n${Object.values(data).join(',')}`;
    populateRenderer(data);
-   //not tested
+   //not tested 
    if (liveDataCounter == 3) {
       fs.writeFileSync(liveDataPath, HEADERS + `\n${Object.values(data).join(',')}`, {
          encoding: 'utf-8',

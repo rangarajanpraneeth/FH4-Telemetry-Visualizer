@@ -16,7 +16,6 @@ def graph(filePath, colorProperty, graphType):
 
         plt.axis("equal")
         plt.axis("off")
-
         plt.scatter(
             dataFrame["carPositionX"],
             dataFrame["carPositionZ"],
@@ -42,19 +41,14 @@ def graph(filePath, colorProperty, graphType):
     elif graphType == "3d":
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="3d")
-
         plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
-
         ax.grid(False)
-
         ax.set_xticks([])
         ax.set_yticks([])
         ax.set_zticks([])
-
         ax.xaxis.set_pane_color((0, 0, 0))
         ax.yaxis.set_pane_color((0, 0, 0))
         ax.zaxis.set_pane_color((0, 0, 0))
-
         ax.scatter(
             dataFrame["carPositionX"],
             dataFrame["carPositionZ"],
@@ -66,5 +60,4 @@ def graph(filePath, colorProperty, graphType):
         ax.axis("equal")
     plt.show()
 
-
-graph("recording-1.csv", "carSpeed", "space")
+graph('recording-1.csv', 'inputGear', 'space')

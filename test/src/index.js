@@ -1,57 +1,38 @@
-import Chart from 'chart.js/auto'
+const { app, BrowserWindow } = require('electron');
+const http = require('http');
 
+// Create a simple HTTP server
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello, World!');
+});
 
-const data = [
-   // { year: 2010, count: 10 },
-   // { year: 2011, count: 20 },
-   // { year: 2012, count: 15 },
-   // { year: 2013, count: 25 },
-   // { year: 2014, count: 22 },
-   // { year: 2015, count: 30 },
-   // { year: 2016, count: 28 },
-   // { year: 2017, count: 30 },
-];
+// Listen on port 1234
+server.listen(1234, '127.0.0.1');
 
-chart = new Chart(
-   document.getElementById('acquisitions'),
-   {
-      type: 'line',
-      data: {
-         labels: data.map(row => row.year),
-         datasets: [
-            {
-               label: 'Acquisitions by year',
-               data: data.map(row => row.count)
-            }
-         ]
-      }
-   }
-);
+// Electron app setup
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
 
-function addData(chart, label, newData) {
-   chart.data.labels.push(label);
-   chart.data.datasets.forEach((dataset) => {
-       dataset.data.push(newData);
-   });
-   chart.update();
+  win.loadURL('http://localhost:1234');
 }
 
-function charting() {
-};
+app.whenReady().then(createWindow);
 
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
 
-let yr = 0
-let v = 0;
-// for (i = 0; i < 100; i++) {
-   // data.push({ year: yr, count: Math.random() * 100 })
-   // console.log(yr)
-   // charting()
-// }
-const PI = 3.14159265
-setInterval(() => {
-   addData(chart, yr, v)
-   yr ++;
-   v = Math.tan(yr)
-   
-}, 100);
-
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});

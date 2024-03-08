@@ -171,31 +171,49 @@ server.on('listening', () => {
 // display function
 const populateRenderer = (data) => { }
 
-var liveDataCounter = 0;
+// var liveDataCounter = 0;
 var liveDataPath = path.join(__dirname, './data', 'liveData.csv');
+
+let x = true;
 
 server.on('message', packets => {
    const data = parsePackets(packets);
-   if (RECORDING && data.inRace === 1) RACE_DATA += `\n${Object.values(data).join(',')}`;
-   populateRenderer(data);
-   //not tested 
-   if (liveDataCounter == 3) {
+   if(x) {
       fs.writeFileSync(liveDataPath, HEADERS + `\n${Object.values(data).join(',')}`, {
          encoding: 'utf-8',
          flag: 'w'
       });
-      liveDataCounter = 0;
-   } else {
-      let x = fs.readFileSync(liveDataPath, 'utf-8');
-      x.push(`\n${Object.values(data).join(',')}`);
-      fs.writeFileSync(liveDataPath, x, {
-         encoding: 'utf-8',
-         flag: 'w'
-      });
-      liveDataCounter++;
+      x = false;
    }
-   counter++;
-   console.log(data);
+   // if (RECORDING && data.inRace === 1) RACE_DATA += `\n${Object.values(data).join(',')}`;
+   // populateRenderer(data);
+   // //not tested 
+   // if (liveDataCounter == 3) {
+   //    fs.writeFileSync(liveDataPath, HEADERS + `\n${Object.values(data).join(',')}`, {
+   //       encoding: 'utf-8',
+   //       flag: 'w'
+   //    });
+   //    liveDataCounter = 0;
+   // } else {
+   //    let x = fs.readFileSync(liveDataPath, 'utf-8');
+   //    x.push(`\n${Object.values(data).join(',')}`);
+   //    fs.writeFileSync(liveDataPath, x, {
+   //       encoding: 'utf-8',
+   //       flag: 'w'
+   //    });
+   //    liveDataCounter++;
+   // }
+   // counter++;
+   // console.log(data);
+   // RACE_DATA += `\n${Object.values(data).join(',')}`;
+   
+
+   let x = fs.readFileSync(liveDataPath, 'utf-8');
+   x.push(`\n${Object.values(data).join(',')}`);
+   fs.writeFileSync(liveDataPath, x, {
+      encoding: 'utf-8',
+      flag: 'w'
+   });
 });
 
 server.bind(PORT, HOST);

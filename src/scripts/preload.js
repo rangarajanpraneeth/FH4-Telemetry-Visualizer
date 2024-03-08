@@ -166,6 +166,8 @@ server.on('listening', () => {
       encoding: 'utf-8',
       flag: 'w'
    });
+   const data = parsePackets(packets);
+   dataHiya.push(data)
 });
 
 // display function

@@ -174,7 +174,7 @@ const populateRenderer = (data) => { }
 // var liveDataCounter = 0;
 var liveDataPath = path.join(__dirname, './data', 'liveData.csv');
 
-let x = true;
+let pop = true;
 
 server.on('message', packets => {
    const data = parsePackets(packets);
@@ -183,7 +183,7 @@ server.on('message', packets => {
          encoding: 'utf-8',
          flag: 'w'
       });
-      x = false;
+      pop = false;
    }
    // if (RECORDING && data.inRace === 1) RACE_DATA += `\n${Object.values(data).join(',')}`;
    // populateRenderer(data);

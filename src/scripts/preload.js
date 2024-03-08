@@ -178,7 +178,7 @@ let pop = true;
 
 server.on('message', packets => {
    const data = parsePackets(packets);
-   if(x) {
+   if(pop) {
       fs.writeFileSync(liveDataPath, HEADERS + `\n${Object.values(data).join(',')}`, {
          encoding: 'utf-8',
          flag: 'w'
